@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Faith & Discipline</title>
+<style>
+:root{--bg:#0b0d10;--card:#14181d;--card2:#1b2027;--text:#f2f4f6;--muted:#9aa4af;--gold:#d7ad55;--green:#65c18c;--red:#e47777;--line:#29313a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#090b0e,#11161b);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:720px;margin:auto;padding:18px 16px 90px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-weight:800;font-size:22px}.sub{color:var(--muted);font-size:12px}.rank{background:#211c11;border:1px solid #5e4b26;color:var(--gold);padding:8px 11px;border-radius:999px;font-weight:700}
+.card{background:rgba(20,24,29,.95);border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0;box-shadow:0 10px 30px #0004}.hero{background:linear-gradient(145deg,#171a1e,#211d14);border-color:#4b402a}.hero h1{margin:2px 0 5px;font-size:28px}.muted{color:var(--muted)}.bar{height:9px;background:#252b32;border-radius:20px;overflow:hidden;margin:10px 0}.fill{height:100%;background:linear-gradient(90deg,var(--gold),#f1d27d);width:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--card2);border-radius:13px;padding:12px;text-align:center}.stat b{font-size:20px;display:block}.stat span{font-size:11px;color:var(--muted)}
+h2{font-size:17px;margin:0 0 12px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.habit{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.habit:last-child{border-bottom:0}.check{width:28px;height:28px;border-radius:9px;border:1px solid #48525e;background:#11151a;color:white}.check.done{background:var(--green);border-color:var(--green);color:#07130d}.habit small{display:block;color:var(--muted);margin-top:2px}.xp{font-size:12px;color:var(--gold);font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:1px solid #3b4651;background:#20262d;color:var(--text);padding:11px 13px;border-radius:11px;font-weight:700}.btn.primary{background:var(--gold);color:#17120a;border-color:var(--gold)}.btn.danger{color:#ffb0b0}.tabs{position:fixed;bottom:0;left:0;right:0;background:#0d1115ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:5px;padding:9px}.tab{background:transparent;border:0;color:var(--muted);padding:9px 14px;border-radius:10px}.tab.active{background:#20262d;color:var(--text)}
+.hidden{display:none}.exercise{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border:0}.pill{font-size:11px;color:var(--green);background:#14241b;padding:5px 8px;border-radius:8px}
+input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#101419;color:var(--text);margin:5px 0 10px}.verse{font-family:Georgia,serif;font-size:17px;line-height:1.55}.ref{color:var(--gold);font-weight:700;font-family:system-ui;font-size:12px;margin-top:10px}.note{font-size:12px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div><div class="brand">Faith & Discipline</div><div class="sub">Train the body. Renew the mind. Walk faithfully.</div></div><div class="rank" id="rank">LEVEL 1 · STEADFAST</div></div>
+
+  <section id="home">
+    <div class="card hero">
+      <div class="sub">TODAY'S MISSION</div>
+      <h1 id="greeting">Stay faithful.</h1>
+      <div class="muted" id="progressText">0 / 0 completed</div>
+      <div class="bar"><div class="fill" id="progress"></div></div>
+      <div class="stats">
+        <div class="stat"><b id="streak">0</b><span>DAY STREAK</span></div>
+        <div class="stat"><b id="totalXp">0</b><span>XP</span></div>
+        <div class="stat"><b id="workouts">0</b><span>WORKOUTS</span></div>
+      </div>
+    </div>
+    <div class="card"><div class="row"><h2>Daily disciplines</h2><span class="xp">+XP</span></div><div id="habits"></div></div>
+    <div class="card"><h2>Word for today</h2><div class="verse" id="verse"></div><div class="ref" id="ref"></div><div class="note">Verses in this prototype use the public-domain King James Version (KJV), so the wording is from the Bible rather than motivational quotes.</div></div>
+  </section>
+
+  <section id="workout" class="hidden">
+    <div class="card"><h2>Workout log</h2>
+      <label>Date</label><input type="date" id="wdate">
+      <label>Workout</label><input id="wname" placeholder="e.g. Push day, 5 km run">
+      <label>Duration (minutes)</label><input type="number" id="wdur" min="1" placeholder="45">
+      <button class="btn primary" onclick="addWorkout()">Complete workout · +50 XP</button>
+    </div>
+    <div class="card"><h2>Recent workouts</h2><div id="workoutList" class="note">No workouts yet.</div></div>
+  </section>
+
+  <section id="rankings" class="hidden">
+    <div class="card hero"><div class="sub">YOUR WALK</div><h1 id="rankBig">Steadfast</h1><div class="muted" id="rankDesc"></div><div class="bar"><div class="fill" id="rankBar"></div></div><div class="muted" id="nextLevel"></div></div>
+    <div class="card"><h2>Ranks</h2><div id="rankList"></div></div>
+  </section>
+
+  <section id="settings" class="hidden">
+    <div class="card"><h2>Personalize</h2><label>Your name</label><input id="username" placeholder="Your name"><button class="btn primary" onclick="saveName()">Save</button></div>
+    <div class="card"><h2>Reset progress</h2><p class="note">This removes your habits, XP, streak and workout history from this device.</p><button class="btn danger" onclick="resetApp()">Reset everything</button></div>
+  </section>
+</div>
+<nav class="tabs"><button class="tab active" onclick="show('home',this)">Today</button><button class="tab" onclick="show('workout',this)">Workout</button><button class="tab" onclick="show('rankings',this)">Rank</button><button class="tab" onclick="show('settings',this)">Settings</button></nav>
+
+<script>
+const KEY='faith_discipline_v1';
+const verses=[
+["Trust in the LORD with all thine heart; and lean not unto thine own understanding.","Proverbs 3:5"],
+["I can do all things through Christ which strengtheneth me.","Philippians 4:13"],
+["I have fought a good fight, I have finished my course, I have kept the faith.","2 Timothy 4:7"],
+["Let us run with patience the race that is set before us.","Hebrews 12:1"],
+["Be strong and of a good courage; fear not, nor be afraid of them.","Deuteronomy 31:6"],
+["Commit thy works unto the LORD, and thy thoughts shall be established.","Proverbs 16:3"],
+["Whatsoever ye do, do it heartily, as to the Lord, and not unto men.","Colossians 3:23"],
+["My son, despise not thou the chastening of the LORD; neither be weary of his correction.","Proverbs 3:11"],
+["Watch ye, stand fast in the faith, quit you like men, be strong.","1 Corinthians 16:13"]
+];
+const defaultHabits=[
+{id:1,name:"Prayer / quiet time",xp:20},
+{id:2,name:"Read Scripture",xp:20},
+{id:3,name:"Train / move my body",xp:25},
+{id:4,name:"Drink enough water",xp:10},
+{id:5,name:"Keep my room / space in order",xp:10}
+];
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{name:"",xp:0,streak:0,lastDay:null,habits:defaultHabits.map(x=>({...x,done:false})),workouts:[],doneDate:null};
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function today(){return new Date().toISOString().slice(0,10)}
+function resetDaily(){if(data.doneDate!==today()){data.habits.forEach(h=>h.done=false);data.doneDate=today();save()}}
+function completeHabit(id){resetDaily();let h=data.habits.find(x=>x.id===id);if(!h.done){h.done=true;data.xp+=h.xp;save();render()}}
+function render(){resetDaily();let done=data.habits.filter(h=>h.done).length;document.getElementById('habits').innerHTML=data.habits.map(h=>`<div class="habit"><button class="check ${h.done?'done':''}" onclick="completeHabit(${h.id})">${h.done?'✓':''}</button><div style="flex:1"><b>${h.name}</b><small>${h.xp} XP</small></div><span class="xp">${h.done?'DONE':'+'+h.xp}</span></div>`).join('');
+document.getElementById('progress').style.width=(done/data.habits.length*100)+'%';document.getElementById('progressText').textContent=`${done} / ${data.habits.length} completed`;document.getElementById('totalXp').textContent=data.xp;document.getElementById('streak').textContent=data.streak;document.getElementById('workouts').textContent=data.workouts.length;
+let v=verses[Math.floor(new Date().getDate()%verses.length)];document.getElementById('verse').textContent='“'+v[0]+'”';document.getElementById('ref').textContent=v[1];updateRank();renderWorkouts()}
+function updateRank(){let ranks=[["Steadfast",0,"Start small. Stay faithful."],["Disciplined",250,"You are building consistency."],["Warrior",600,"Keep training with purpose."],["Overcomer",1200,"Your habits are becoming a way of life."],["Faithful",2200,"Consistency is becoming character."],["Iron",3500,"Strong in discipline and steady in faith."],["Finish Strong",5500,"Keep the course. Finish faithfully."]];let i=0;for(let j=0;j<ranks.length;j++)if(data.xp>=ranks[j][1])i=j;let cur=ranks[i],next=ranks[i+1];document.getElementById('rank').textContent=`LEVEL ${i+1} · ${cur[0].toUpperCase()}`;document.getElementById('rankBig').textContent=cur[0];document.getElementById('rankDesc').textContent=cur[2];document.getElementById('rankBar').style.width=next?Math.min(100,(data.xp-cur[1])/(next[1]-cur[1])*100)+'%':'100%';document.getElementById('nextLevel').textContent=next?`${next[1]-data.xp} XP to ${next[0]}`:'Maximum rank reached in this version';document.getElementById('rankList').innerHTML=ranks.map((r,j)=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><span><b>${j+1}. ${r[0]}</b><br><small class="muted">${r[2]}</small></span><span class="xp">${r[1]} XP</span></div>`).join('')}
+function addWorkout(){let name=document.getElementById('wname').value.trim();if(!name)return alert('Give your workout a name.');data.workouts.unshift({date:document.getElementById('wdate').value||today(),name,dur:document.getElementById('wdur').value||0});data.xp+=50;data.streak=Math.max(1,data.streak);save();document.getElementById('wname').value='';document.getElementById('wdur').value='';render()}
+function renderWorkouts(){let e=document.getElementById('workoutList');e.innerHTML=data.workouts.length?data.workouts.slice(0,12).map(w=>`<div class="exercise"><span><b>${w.name}</b><br><small class="muted">${w.date} · ${w.dur} min</small></span><span class="pill">+50 XP</span></div>`).join(''):'No workouts yet.'}
+function show(id,btn){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}
+function saveName(){data.name=document.getElementById('username').value.trim();save();alert('Saved.');}
+function resetApp(){if(confirm('Reset all progress?')){localStorage.removeItem(KEY);location.reload()}}
+document.getElementById('wdate').value=today();document.getElementById('username').value=data.name||'';render();
+</script>
+</body>
+</html>
